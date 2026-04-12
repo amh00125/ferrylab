@@ -91,6 +91,8 @@ body { font-family: var(--font); background: var(--surface); color: var(--text);
 .btn-outline:hover { border-color: var(--teal-mid); color: var(--teal-dark); background: var(--teal-light); }
 .btn-teal { background: var(--teal); color: white; border-color: var(--teal); }
 .btn-teal:hover { background: var(--teal-dark); }
+.btn-delete { width: 24px; height: 24px; border: none; background: transparent; color: var(--text-faint); font-size: 13px; cursor: pointer; border-radius: 5px; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
+.btn-delete:hover { background: var(--red-light); color: var(--red); }
 .btn-restock { background: transparent; border-color: var(--teal-mid); color: var(--teal-dark); font-size: 11px; padding: 4px 10px; }
 .btn-restock:hover { background: var(--teal-light); }
 .btn-restock.sent { border-color: var(--border); color: var(--text-faint); cursor: default; pointer-events: none; }
@@ -195,7 +197,7 @@ body { font-family: var(--font); background: var(--surface); color: var(--text);
       </div>
       <div class="filter-row" id="filterRow"></div>
       <table class="inv-table">
-        <thead><tr><th>Item</th><th>Category</th><th>Quantity</th><th>Status</th><th>Action</th></tr></thead>
+        <thead><tr><th>Item</th><th>Category</th><th>Quantity</th><th>Status</th><th>Action</th><th></th></tr></thead>
         <tbody id="invBody"></tbody>
       </table>
     </div>
@@ -446,6 +448,7 @@ function renderInventory() {
             : `<button class="btn btn-restock" onclick="requestRestock(${item.id})">Request restock</button>`
           }
         </td>
+        <td><button class="btn-delete" onclick="deleteItem(${item.id})" title="Delete item">✕</button></td>
       </tr>`).join('');
 }
 
@@ -514,6 +517,20 @@ async function addItem() {
 
   if (isLive) {
     await apiCall('addItem', { name, cat, qty, thresh, unit, addedBy: user });
+  }
+}
+
+// ── DELETE ITEM ─────────────────────────────────────────────────
+async function deleteItem(id) {
+  const item = inventory.find(i => i.id === id);
+  if (!item) return;
+  const confirmed = confirm(`Delete "${item.name}" from inventory? This cannot be undone.`);
+  if (!confirmed) return;
+  inventory = inventory.filter(i => i.id !== id);
+  renderInventory();
+  showToast(`"${item.name}" deleted`);
+  if (isLive) {
+    await apiCall('deleteItem', { id });
   }
 }
 
