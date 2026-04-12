@@ -281,24 +281,9 @@ const CONFIG = {
 // ═══════════════════════════════════════════════════════════════
 
 // ── DEMO DATA (used when no SCRIPT_URL is configured) ──────────
-const DEMO_INVENTORY = [
-  { id: 1, name: 'Petri dishes (90mm)',        cat: 'Lab consumables',           qty: 8,  thresh: 20, unit: 'boxes',   restockSent: false },
-  { id: 2, name: 'Nitrile gloves (M)',          cat: 'PPE',                       qty: 45, thresh: 30, unit: 'pairs',   restockSent: false },
-  { id: 3, name: 'Atlantic salmon feed (2mm)',  cat: 'Fish feed & supplements',   qty: 3,  thresh: 10, unit: 'bags',    restockSent: false },
-  { id: 4, name: 'Halibut feed (starter)',      cat: 'Fish feed & supplements',   qty: 22, thresh: 15, unit: 'bags',    restockSent: false },
-  { id: 5, name: 'Amoxicillin bath treatment',  cat: 'Medications & treatments',  qty: 2,  thresh: 5,  unit: 'bottles', restockSent: false },
-  { id: 6, name: 'Water quality test strips',   cat: 'Lab consumables',           qty: 60, thresh: 40, unit: 'strips',  restockSent: false },
-  { id: 7, name: 'Net repair kit',              cat: 'Equipment & tools',         qty: 4,  thresh: 3,  unit: 'kits',    restockSent: false },
-  { id: 8, name: 'Dissection kit',              cat: 'Lab consumables',           qty: 1,  thresh: 3,  unit: 'kits',    restockSent: false },
-  { id: 9, name: 'Face shields',                cat: 'PPE',                       qty: 12, thresh: 8,  unit: 'units',   restockSent: false },
-  { id: 10, name: 'Vitamin C supplement',       cat: 'Fish feed & supplements',   qty: 0,  thresh: 5,  unit: 'tubs',    restockSent: false },
-];
+const DEMO_INVENTORY = [];
 
-const DEMO_WORK_ORDERS = [
-  { id: 1, title: 'Clean tank 3 biofilters',     assigned: 'Callum', priority: 'High',   due: '2026-04-14', desc: 'Deep clean all biofilter media in halibut tank 3. Record water params before and after.',    status: 'Open',      by: 'Sarah', created: '2026-04-10' },
-  { id: 2, title: 'Weigh batch 7 salmon smolts', assigned: 'Jamie',  priority: 'Medium', due: '2026-04-16', desc: 'Monthly weight sampling of batch 7. Minimum 30 fish. Log results to the weight spreadsheet.', status: 'Open',      by: 'Ross',  created: '2026-04-11' },
-  { id: 3, title: 'Replace UV lamp — unit B',    assigned: 'Morag',  priority: 'Low',    due: '2026-04-20', desc: 'UV lamp in recirculation unit B is due replacement. Replacement lamp is already in stores.',  status: 'Completed', by: 'Jamie', created: '2026-04-08' },
-];
+const DEMO_WORK_ORDERS = [];
 
 // ── STATE ───────────────────────────────────────────────────────
 let inventory    = JSON.parse(JSON.stringify(DEMO_INVENTORY));
