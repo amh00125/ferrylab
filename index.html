@@ -622,14 +622,34 @@ function renderAlerts() {
   document.getElementById('alertBadge').textContent = restockLog.length;
   document.getElementById('alertList').innerHTML = restockLog.length === 0
     ? '<div class="empty">No restock requests sent yet</div>'
-    : [...restockLog].reverse().map(r => `
+    : [...restockLog].reverse().map((r, i) => {
+        const realIndex = restockLog.length - 1 - i;
+        return `
       <div class="restock-row">
         <div>
           <div class="restock-name">${r.name}</div>
           <div class="restock-meta">${r.cat} &middot; ${r.qty} ${r.unit} remaining &middot; Requested by ${r.by} &middot; ${r.time}</div>
         </div>
-        <span class="tag tag-open">Email sent</span>
-      </div>`).join('');
+        <div style="display:flex;align-items:center;gap:8px">
+          <span class="tag tag-open">Email sent</span>
+          <button class="btn-delete" onclick="deleteRestockEntry(${realIndex})" title="Remove entry">✕</button>
+        </div>
+      </div>`;
+      }).join('');
+}
+
+// ── DELETE RESTOCK ENTRY ────────────────────────────────────────
+async function deleteRestockEntry(index) {
+  const entry = restockLog[index];
+  if (!entry) return;
+  const confirmed = confirm(`Remove restock request for "${entry.name}"?`);
+  if (!confirmed) return;
+  restockLog.splice(index, 1);
+  renderAlerts();
+  showToast('Restock entry removed');
+  if (isLive) {
+    await apiCall('deleteRestockEntry', { index });
+  }
 }
 
 // ── UTILITIES ───────────────────────────────────────────────────
