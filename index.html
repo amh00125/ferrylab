@@ -310,6 +310,7 @@ let isLive       = false; // true once connected to Google Sheets
 // ── INIT ────────────────────────────────────────────────────────
 window.addEventListener('DOMContentLoaded', () => {
   populateUserSelect();
+  populateCategorySelects();
   renderFilters();
   renderInventory();
   renderWorkOrders();
@@ -333,7 +334,16 @@ function populateUserSelect() {
   });
 }
 
-function onUserChange() {
+function populateCategorySelects() {
+  const selects = ['newCat'];
+  selects.forEach(id => {
+    const sel = document.getElementById(id);
+    if (!sel) return;
+    sel.innerHTML = CONFIG.CATEGORIES.map(c => `<option value="${c}">${c}</option>`).join('');
+  });
+}
+
+
   const user = document.getElementById('userSelect').value;
   if (user) showToast(`Welcome, ${user}`);
 }
