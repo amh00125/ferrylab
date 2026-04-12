@@ -317,6 +317,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
   if (CONFIG.SCRIPT_URL) {
     isLive = true;
+    document.getElementById('configNotice').style.display = 'none';
     loadFromSheets();
   }
 });
