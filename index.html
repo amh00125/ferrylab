@@ -342,6 +342,11 @@ function populateCategorySelects() {
     if (!sel) return;
     sel.innerHTML = CONFIG.CATEGORIES.map(c => `<option value="${c}">${c}</option>`).join('');
   });
+  const woAssign = document.getElementById('woAssign');
+  if (woAssign) {
+    woAssign.innerHTML = '<option value="Everyone">Everyone</option>' +
+      CONFIG.USERS.map(u => `<option value="${u}">${u}</option>`).join('');
+  }
 }
 
 function onUserChange() {
