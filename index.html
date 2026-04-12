@@ -318,7 +318,8 @@ window.addEventListener('DOMContentLoaded', () => {
 
   if (CONFIG.SCRIPT_URL) {
     isLive = true;
-    document.getElementById('configNotice').style.display = 'none';
+    const notice = document.getElementById('configNotice');
+    if (notice) notice.style.display = 'none';
     loadFromSheets();
   }
 });
