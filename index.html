@@ -189,6 +189,9 @@ body { font-family: var(--font); background: var(--surface); color: var(--text);
           <div class="form-group"><label>Category</label>
             <select id="newCat"></select>
           </div>
+          <div class="form-group"><label>Location</label>
+            <select id="newLocation"></select>
+          </div>
           <div class="form-group"><label>Current quantity</label><input type="number" id="newQty" placeholder="0" min="0"></div>
           <div class="form-group"><label>Low stock threshold</label><input type="number" id="newThresh" placeholder="10" min="1"></div>
           <div class="form-group"><label>Unit (e.g. boxes, kg, pairs)</label><input type="text" id="newUnit" placeholder="units"></div>
@@ -197,7 +200,7 @@ body { font-family: var(--font); background: var(--surface); color: var(--text);
       </div>
       <div class="filter-row" id="filterRow"></div>
       <table class="inv-table">
-        <thead><tr><th>Item</th><th>Category</th><th>Quantity</th><th>Status</th><th>Action</th><th></th></tr></thead>
+        <thead><tr><th>Item</th><th>Category</th><th>Location</th><th>Quantity</th><th>Status</th><th>Action</th><th></th></tr></thead>
         <tbody id="invBody"></tbody>
       </table>
     </div>
@@ -268,6 +271,17 @@ const CONFIG = {
     'Tank Room Equipment',
     'Maintenance & Spares',
     'Office/Admin'
+  ],
+
+  LOCATIONS: [
+    'Lab Room (Entrance)',
+    'Lab Room (Main)',
+    'SP11/12',
+    'Wild Salmon Room',
+    'Room 1',
+    'Room 2',
+    'Room 3',
+    'Room 4'
   ]
 
 };
@@ -329,6 +343,8 @@ function populateCategorySelects() {
     if (!sel) return;
     sel.innerHTML = CONFIG.CATEGORIES.map(c => `<option value="${c}">${c}</option>`).join('');
   });
+  const locSel = document.getElementById('newLocation');
+  if (locSel) locSel.innerHTML = CONFIG.LOCATIONS.map(l => `<option value="${l}">${l}</option>`).join('');
   const woAssign = document.getElementById('woAssign');
   if (woAssign) {
     woAssign.innerHTML = '<option value="Everyone">Everyone</option>' +
@@ -418,6 +434,7 @@ function renderInventory() {
           <div class="item-name">${item.name}</div>
         </td>
         <td><span style="font-size:11px;color:var(--text-muted)">${item.cat}</span></td>
+        <td><span style="font-size:11px;color:var(--text-muted)">${item.location || '—'}</span></td>
         <td>
           <div class="qty-control">
             <button class="qty-btn" onclick="changeQty(${item.id}, -1)">−</button>
@@ -480,16 +497,17 @@ async function changeQty(id, delta) {
 // ── ADD ITEM ────────────────────────────────────────────────────
 async function addItem() {
   const user   = document.getElementById('userSelect').value;
-  const name   = document.getElementById('newName').value.trim();
-  const cat    = document.getElementById('newCat').value;
-  const qty    = parseInt(document.getElementById('newQty').value)    || 0;
-  const thresh = parseInt(document.getElementById('newThresh').value) || 10;
-  const unit   = document.getElementById('newUnit').value.trim()      || 'units';
+  const name     = document.getElementById('newName').value.trim();
+  const cat      = document.getElementById('newCat').value;
+  const location = document.getElementById('newLocation').value;
+  const qty      = parseInt(document.getElementById('newQty').value)    || 0;
+  const thresh   = parseInt(document.getElementById('newThresh').value) || 10;
+  const unit     = document.getElementById('newUnit').value.trim()      || 'units';
 
   if (!name)  { showToast('Please enter an item name'); return; }
   if (!user)  { showToast('Please select your name first'); return; }
 
-  const newItem = { id: nextItemId++, name, cat, qty, thresh, unit, restockSent: false };
+  const newItem = { id: nextItemId++, name, cat, location, qty, thresh, unit, restockSent: false };
   inventory.push(newItem);
 
   document.getElementById('newName').value   = '';
@@ -501,7 +519,7 @@ async function addItem() {
   showToast(`"${name}" added to inventory`);
 
   if (isLive) {
-    await apiCall('addItem', { name, cat, qty, thresh, unit, addedBy: user });
+    await apiCall('addItem', { name, cat, location, qty, thresh, unit, addedBy: user });
   }
 }
 
