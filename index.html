@@ -375,6 +375,7 @@ async function apiCall(action, payload = {}) {
 async function loadFromSheets() {
   showToast('Loading live data...');
   const data = await apiCall('getAll');
+  console.log('Data from sheet:', JSON.stringify(data));
   if (!data) return;
   if (data.inventory)  inventory  = data.inventory;
   if (data.workOrders) workOrders = data.workOrders;
@@ -603,6 +604,8 @@ async function addWorkOrder() {
   const due   = document.getElementById('woDue').value;
   const desc  = document.getElementById('woDesc').value.trim();
 
+  console.log('addWorkOrder called', { user, title, assign, pri, due, desc, isLive });
+
   if (!title) { showToast('Please enter a title'); return; }
   if (!due)   { showToast('Please set a due date'); return; }
 
@@ -618,7 +621,11 @@ async function addWorkOrder() {
   showToast('Work order created');
 
   if (isLive) {
-    await apiCall('addWorkOrder', { title, assigned: assign, priority: pri, due, desc, createdBy: user || 'Unknown' });
+    console.log('Sending to sheet...');
+    const result = await apiCall('addWorkOrder', { title, assigned: assign, priority: pri, due, desc, createdBy: user || 'Unknown' });
+    console.log('Sheet response:', result);
+  } else {
+    console.log('Not live — not saving to sheet');
   }
 }
 
